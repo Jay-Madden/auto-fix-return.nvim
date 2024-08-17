@@ -1,6 +1,6 @@
 local M = {}
 
-M.setup_aucmds = function()
+M.setup_autocmds = function()
   vim.api.nvim_create_autocmd(
     -- { "InsertLeave", "TextChanged" },
     { "TextChangedI", "TextChanged" },
