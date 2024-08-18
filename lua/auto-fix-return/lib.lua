@@ -8,7 +8,7 @@ M.setup_user_commands = function()
   end, {})
 
   vim.api.nvim_create_user_command("AutoFixReturnEnable", function()
-    M.setup_autocmds()
+    M.enable_autocmds()
   end, {})
 
   vim.api.nvim_create_user_command("AutoFixReturnDisable", function()
