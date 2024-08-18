@@ -42,11 +42,14 @@ M.wrap_golang_return = function()
            result: (_) @result 
            (ERROR)? @error_end
       ) 
-      (short_var_declaration 
-          left: (expression_list
-              (identifier) @named_result
-              (ERROR (identifier) @error_end)?
-          )
+      (
+        (function_declaration)
+        (short_var_declaration 
+            left: (expression_list
+                (identifier) @named_result
+                (ERROR (identifier) @error_end)?
+            )
+        )
       )
   ]
   ]]
