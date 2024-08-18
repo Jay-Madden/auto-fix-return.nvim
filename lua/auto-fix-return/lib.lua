@@ -1,19 +1,40 @@
 local M = {}
 
+local command_id = 0
+
 M.setup_autocmds = function()
-  vim.api.nvim_create_autocmd(
-    -- { "InsertLeave", "TextChanged" },
+  M.enable_autocmds()
+end
+
+M.setup_user_commands = function()
+  vim.api.nvim_create_user_command("AutoFixReturn", function()
+    M.wrap_golang_return()
+  end, {})
+
+  vim.api.nvim_create_user_command("AutoFixReturnEnable", function()
+    M.setup_autocmds()
+  end, {})
+
+  vim.api.nvim_create_user_command("AutoFixReturnDisable", function()
+    M.disable_autocomds()
+  end, {})
+end
+
+M.enable_autocmds = function()
+  command_id = vim.api.nvim_create_autocmd(
     { "TextChangedI", "TextChanged" },
     { callback = M.wrap_golang_return }
   )
+end
+
+M.disable_autocomds = function()
+  vim.api.nvim_del_autocmd(command_id)
 end
 
 M.wrap_golang_return = function()
   if vim.bo.filetype ~= "go" then
     return
   end
-
-  vim.print("line: " .. vim.api.nvim_get_current_line())
 
   -- This query attempts to match all valid and also most common invalid or inprogress syntax trees for a function declaration
   -- short_var_declaration is for the edge case of named returns
