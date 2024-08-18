@@ -16,6 +16,9 @@ and hopefully all combinations of the above. If you find a bug please report it 
 
 ## Installation
 
+> [!IMPORTANT]  
+> Requires the Go treesitter parser to be installed `TSInstall go` if using nvim-treesitter.
+
 #### Lazy
 ```lua
 return {
