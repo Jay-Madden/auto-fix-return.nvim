@@ -1,7 +1,6 @@
-### WIP
+# auto-fix-return.nvim
 
-
-### Installation
+## Installation
 
 #### Lazy
 ```lua
@@ -13,3 +12,17 @@ return {
 }
 ```
 
+## Configuration
+
+#### Defaults
+```lua
+require("auto-fix-return").setup({
+  enable_autocmds = true, -- Enable or disable the autofix on type behvaior
+})
+```
+
+### Commands
+
+`AutoFixReturn`: Format the function definition under the cursor, adding or removing parenthesis as needed
+`AutoFixReturnEnable`: Enable the autofix on type autocommands
+`AutoFixReturnDisable`: Disable the autofix on type autocommands
