@@ -1,6 +1,12 @@
 # 🧰 auto-fix-return.nvim
 Adds or removes parenthesis from Golang return defintions as you type. 
 
+Supports 
+- Single returns 
+- Multi returns 
+- Named returns 
+and hopefully all combinations of the above. If you find a bug please report it as an issue. 
+
 ## Preview
 ![high_res_final](https://github.com/user-attachments/assets/a5b9b50d-cbc7-42a6-b3f7-e20795c93823)
 
