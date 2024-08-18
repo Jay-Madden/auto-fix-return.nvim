@@ -8,6 +8,7 @@ Supports
 - Functions
 - Methods
 - Lambdas
+
 and hopefully all combinations of the above. If you find a bug please report it as an issue. 
 
 ## Preview
