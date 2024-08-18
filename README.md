@@ -1,4 +1,7 @@
-# auto-fix-return.nvim
+# 🧰 auto-fix-return.nvim
+Adds or removes parenthesis from Golang return defintions as you type. 
+
+## Preview
 ![high_res_final](https://github.com/user-attachments/assets/a5b9b50d-cbc7-42a6-b3f7-e20795c93823)
 
 ## Installation
@@ -13,7 +16,7 @@ return {
 }
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 #### Defaults
 ```lua
