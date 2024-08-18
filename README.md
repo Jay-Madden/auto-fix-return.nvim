@@ -1,4 +1,5 @@
 # auto-fix-return.nvim
+![high_res_final](https://github.com/user-attachments/assets/a5b9b50d-cbc7-42a6-b3f7-e20795c93823)
 
 ## Installation
 
