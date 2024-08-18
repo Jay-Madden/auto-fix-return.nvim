@@ -2,10 +2,6 @@ local M = {}
 
 local command_id = 0
 
-M.setup_autocmds = function()
-  M.enable_autocmds()
-end
-
 M.setup_user_commands = function()
   vim.api.nvim_create_user_command("AutoFixReturn", function()
     M.wrap_golang_return()
