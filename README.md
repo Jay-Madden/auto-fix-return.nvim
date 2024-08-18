@@ -5,6 +5,9 @@ Supports
 - Single returns 
 - Multi returns 
 - Named returns 
+- Functions
+- Methods
+- Lambdas
 and hopefully all combinations of the above. If you find a bug please report it as an issue. 
 
 ## Preview
