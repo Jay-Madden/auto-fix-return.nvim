@@ -56,7 +56,7 @@ M.wrap_golang_return = function()
          ;;   (ERROR)))) ; [16, 11] - [16, 12]
          ;; We need to handle this case specifically so we anchor it to the ancestor node for interface
          (
-           (ERROR)? @error_end (#has-parent? @error_end interface_type)
+           (ERROR)? @error_interface_end (#has-parent? @error_interface_end interface_type)
          )
       )  
       ;; This is a weird edgecase in regards to handling multi returns, an in progress multireturn on a top level function is
@@ -103,7 +103,7 @@ M.wrap_golang_return = function()
     elseif capture_name == "result" and final_end_row ~= 0 then
       final_end_col = end_col
       final_end_row = end_row
-    elseif capture_name == "error_end" then
+    elseif capture_name == "error_end" or capture_name == "error_interface_end" then
       final_end_col = end_col
       final_end_row = end_row
     end
