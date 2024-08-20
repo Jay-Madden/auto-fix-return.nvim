@@ -37,11 +37,31 @@ M.wrap_golang_return = function()
   -- EXAMPLE: func foo() err error { }
   local query_str = [[
   [
-      (_
-           (ERROR)? @error_start 
-           result: (_) @result 
-           (ERROR)? @error_end
-      ) 
+      (
+         ;; The default case for most method/function declarations, they are the only ones that have the named field "result" 
+         ;; so we can generally rely on that to be accurate with the (ERROR) tokens preceeding or proceeding it to give us the
+         ;; complete range of the intended return declaration
+	       (_
+		       (ERROR)? @error_start 
+		       result: (_) @result 
+		       (ERROR)? @error_end
+         ) 
+         ;; The in progress parse tree for interface method declarations places the error token
+         ;; one level up in the tree
+         ;; type: (interface_type ; [15, 9] - [17, 1]
+         ;;   (method_elem ; [16, 2] - [16, 11]
+         ;;     name: (field_identifier) ; [16, 2] - [16, 5]
+         ;;     parameters: (parameter_list) ; [16, 5] - [16, 7]
+         ;;     result: (type_identifier)) ; [16, 8] - [16, 11]
+         ;;   (ERROR)))) ; [16, 11] - [16, 12]
+         ;; We need to handle this case specifically so we anchor it to the ancestor node for interface
+         (
+           (ERROR)? @error_end (#has-ancestor? @error_end interface_type)
+         )
+      )  
+      ;; This is a weird edgecase in regards to handling multi returns, an in progress multireturn on a top level function is
+      ;; parsed intermediately as a short_var_declaration so we have to anchor it to the actual function declaration itself
+      ;; to prevent incorrect matches on non method syntaxes E.G a for loop
       (
         (function_declaration)
         (short_var_declaration 
