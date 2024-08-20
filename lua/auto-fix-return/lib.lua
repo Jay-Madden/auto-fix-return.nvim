@@ -37,11 +37,14 @@ M.wrap_golang_return = function()
   -- EXAMPLE: func foo() err error { }
   local query_str = [[
   [
-      (_
-           (ERROR)? @error_start 
-           result: (_) @result 
-           (ERROR)? @error_end
-      ) 
+      (
+	       (_
+		       (ERROR)? @error_start 
+		       result: (_) @result 
+		       (ERROR)? @error_end
+           )
+		   (ERROR)? @error_end
+      )  
       (
         (function_declaration)
         (short_var_declaration 
