@@ -8,8 +8,17 @@ Supports
 - Functions
 - Methods
 - Lambdas
+- Interfaces
 
 and hopefully all combinations of the above. If you find a bug please report it as an issue. 
+
+> [!NOTE]
+> The plugin attempts to add parenthesis as you type. Which means that its mostly working off of invalid parse trees.
+> This is very nice to use but makes it difficult to cover all edgecases from a parsing standpoint, as different error states of the tree can be matched incorectly. 
+> If you find an error state that is not covered please report it as an issue. 
+> 
+> You can run the command `AutoFixReturnDisable` to turn off the autocommnd and make whatever changes you need to that line. 
+> Then reenable the plugin with `AutoFixReturnEnable` and the line will not be edited again unless you touch the declaration again.
 
 ## Preview
 ![high_res_final](https://github.com/user-attachments/assets/a5b9b50d-cbc7-42a6-b3f7-e20795c93823)
