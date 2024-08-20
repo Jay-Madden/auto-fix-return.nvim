@@ -147,6 +147,12 @@ M.wrap_golang_return = function()
     return
   end
 
+  -- If the cursor is positioned outside of the immediate return declaration match then we do not want to touch it as this can 
+  -- cause weird behavior when editing parts of a function that are unrelated to the return declaration and if there is a weird edge that triggers
+  if cursor_row < final_start_row + 1 or cursor_row > final_end_row + 1 or cursor_col < final_start_col or cursor_col > final_end_col then
+    return
+  end
+
   vim.api.nvim_buf_set_text(
     0,
     final_start_row,
