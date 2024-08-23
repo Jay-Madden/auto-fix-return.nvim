@@ -169,7 +169,12 @@ M.wrap_golang_return = function()
 
   -- If the cursor is positioned outside of the immediate return declaration match then we do not want to touch it as this can 
   -- cause weird behavior when editing parts of a function that are unrelated to the return declaration and if there is a weird edge that triggers
-  if cursor_row < final_start_row + 1 or cursor_row > final_end_row + 1 or cursor_col < final_start_col or cursor_col > final_end_col then
+  -- 
+  -- We offset the final column start value to avoid edgecases with regards to using 'daw' on a method_declaration
+  -- E.G
+  -- func (f Foo) () int {} 
+  -- This parse will break without the start_col offset
+  if cursor_row < final_start_row + 1 or cursor_row > final_end_row + 1 or cursor_col < final_start_col + 1 or cursor_col > final_end_col then
     return
   end
 
