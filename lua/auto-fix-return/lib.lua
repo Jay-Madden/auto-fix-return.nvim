@@ -17,6 +17,12 @@ M.setup_user_commands = function()
 end
 
 M.enable_autocmds = function()
+
+  if command_id ~= 0 then
+    vim.notify("AutoFixReturn autocommands already enabled", vim.log.levels.INFO)
+    return
+  end
+
   command_id = vim.api.nvim_create_autocmd(
     { "TextChangedI", "TextChanged" },
     { callback = M.wrap_golang_return }
@@ -24,7 +30,14 @@ M.enable_autocmds = function()
 end
 
 M.disable_autocomds = function()
+
+  if command_id == 0 then
+    vim.notify("AutoFixReturn autocommands already disabled", vim.log.levels.INFO)
+    return
+  end
+
   vim.api.nvim_del_autocmd(command_id)
+  command_id = 0
 end
 
 M.wrap_golang_return = function()
