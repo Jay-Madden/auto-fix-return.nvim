@@ -73,7 +73,48 @@ function M.build_fixed_definition(line, cursor_col)
   end
 
   -- If there are any commas in the return definition we know we will need parenthesis
-  local returns = vim.split(value, ",")
+  -- But we need to be careful not to split on commas inside brackets (like generics)
+  local returns = {}
+  local current_part = ""
+  local bracket_stack = {}
+  
+  for i = 1, #value do
+    local c = value:sub(i, i)
+    
+    if c == "{" or c == "[" or c == "(" then
+      table.insert(bracket_stack, c)
+    elseif c == "}" or c == "]" or c == ")" then
+      table.remove(bracket_stack)
+    elseif c == "," and #bracket_stack == 0 then
+      -- Only split on commas when not inside brackets
+      table.insert(returns, current_part)
+      current_part = ""
+      goto continue
+    end
+    
+    current_part = current_part .. c
+    ::continue::
+  end
+  
+  -- Always add the final part, even if empty (for trailing commas)
+  table.insert(returns, current_part)
+  
+  -- Handle trailing commas - if we have empty parts, it indicates multiple returns
+  local non_empty_returns = {}
+  for _, ret in ipairs(returns) do
+    local trimmed = ret:gsub("^%s*", ""):gsub("%s*$", "")  -- trim whitespace
+    if trimmed ~= "" then
+      table.insert(non_empty_returns, ret)
+    end
+  end
+  
+  -- If we had more returns than non-empty ones, it means we had trailing commas
+  if #returns > #non_empty_returns then
+    -- Restore comma-split behavior for trailing comma cases
+    returns = vim.split(value, ",")
+  else
+    returns = non_empty_returns
+  end
 
   local function trim_end(s)
     return s:gsub("%s+$", "")
@@ -137,6 +178,7 @@ function M.build_fixed_definition(line, cursor_col)
           table.insert(bracket_stack, #bracket_stack + 1, next_char)
         end
 
+        -- Only split on spaces when we're not inside brackets (like [T, V] in generics)
         if #bracket_stack == 0 then
           temp_returns[#temp_returns + 1] = curr_word
           curr_word = ""

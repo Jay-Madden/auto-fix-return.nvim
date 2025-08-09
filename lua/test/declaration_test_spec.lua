@@ -3125,4 +3125,26 @@ describe("test non function syntax constructs", function()
       eq("1", char)
     end)
   end)
+
+  describe("when a single generic return type with multiple type parameters", function()
+    local winid = 0
+    before_each(function()
+      winid = utils.set_test_window_value("func foo() foo.bar[T, V]| {}")
+      vim.cmd("AutoFixReturn")
+    end)
+
+    after_each(function()
+      utils.cleanup_test(winid)
+    end)
+
+    it("should not add parentheses around the generic return type", function()
+      local lines = utils.get_win_lines(winid)
+      eq("func foo() foo.bar[T, V] {}", lines[1])
+    end)
+
+    it("should not touch the cursor", function()
+      local char = utils.get_cursor_char(winid)
+      eq("]", char)
+    end)
+  end)
 end)
