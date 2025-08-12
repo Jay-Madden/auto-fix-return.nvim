@@ -13,7 +13,7 @@ CONTENTS                                       *auto-fix-return.nvim-contents*
 ==============================================================================
 1. INTRODUCTION                            *auto-fix-return.nvim-introduction*
 
-Plugin inspired by GoLand that adds or removes parenthesis from Golang return
+Plugin inspired by GoLand that adds or removes parentheses from Golang return
 definitions as you type.
 
 Supports:
@@ -96,7 +96,7 @@ Setup function with defaults:
 
                                                             *:AutoFixReturn*
 `:AutoFixReturn`        Format the function definition under the cursor, 
-                        adding or removing parenthesis as needed
+                        adding or removing parentheses as needed
 
 `:AutoFixReturn enable` Enable the autofix on type behavior
 
@@ -105,13 +105,13 @@ Setup function with defaults:
 ==============================================================================
 6. USAGE NOTES                              *auto-fix-return.nvim-usage-notes*
 
-IMPORTANT: The plugin attempts to add parenthesis as you type. Which means 
-that its mostly working off of invalid parse trees. This is very nice to use 
-but makes it very difficult to cover all edgecases from a parsing standpoint, 
+IMPORTANT: The plugin attempts to add parentheses as you type. This means 
+that it's mostly working off invalid parse trees. This is very nice to use 
+but makes it very difficult to cover all edge cases from a parsing standpoint, 
 as different error states of the tree can be matched incorrectly.
 
 You can run the command `AutoFixReturn disable` to turn off the autocommand 
-and make whatever changes you need to that line. Then reenable the plugin 
+and make whatever changes you need to that line. Then re-enable the plugin 
 with `AutoFixReturn enable` and the line will not be edited unless you touch 
 the declarations return definition again.
 

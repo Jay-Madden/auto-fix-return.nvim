@@ -2,7 +2,7 @@
 
 [![Test](https://github.com/Jay-Madden/auto-fix-return.nvim/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Jay-Madden/auto-fix-return.nvim/actions/workflows/run-tests.yml)
 
-Plugin inspired by GoLand that adds or removes parenthesis from Golang return defintions as you type.
+Plugin inspired by GoLand that adds or removes parentheses from Golang return definitions as you type.
 
 Supports
 - Functions
@@ -22,18 +22,18 @@ and hopefully all combinations of the above. If you find a bug please report it 
 ![high_res_final](https://github.com/user-attachments/assets/a5b9b50d-cbc7-42a6-b3f7-e20795c93823)
 
 > [!IMPORTANT]
-> The plugin attempts to add parenthesis as you type. Which means that its mostly working off of invalid parse trees.
-> This is very nice to use but makes it very difficult to cover all edgecases from a parsing standpoint, as different error states of the tree can be matched incorectly.
+> The plugin attempts to add parentheses as you type. This means that it's mostly working off invalid parse trees.
+> This is very nice to use but makes it very difficult to cover all edge cases from a parsing standpoint, as different error states of the tree can be matched incorrectly.
 > If you find an error state that is not covered please report it as an issue.
 >
 > You can run the command `AutoFixReturn disable` to turn off the autocommand and make whatever changes you need to that line.
-> Then reenable the plugin with `AutoFixReturn enable` and the line will not be edited unless you touch the declarations return definition again.
+> Then re-enable the plugin with `AutoFixReturn enable` and the line will not be edited unless you touch the declarations return definition again.
 
 > [!TIP]
 > You can always invoke the fix manually with `AutoFixReturn` as long as your cursor is in the return definition.
 
 > [!NOTE]
-> To ensure that that we are not overly aggressive in the fixes that we apply and break unrelated code, whenever a fix is found, the contents of the current buffer and the fix are first copied to a scratch buffer and a full TreeSitter parse is run there before the fix is applied to the live buffer. If the buffer with the proposed fix from the builder contains **ANY** parse errors in it the fix will be ignored. 
+> To ensure that we are not overly aggressive in the fixes that we apply and break unrelated code, whenever a fix is found, the contents of the current buffer and the fix are first copied to a scratch buffer and a full TreeSitter parse is run there before the fix is applied to the live buffer. If the buffer with the proposed fix from the builder contains **ANY** parse errors in it the fix will be ignored. 
 >
 > This is because in rare cases treesitter error tokens can apply across an arbitrary number of rows and we would end up deleting large swathes of code which is not what we want. 
 >
@@ -41,7 +41,7 @@ and hopefully all combinations of the above. If you find a bug please report it 
 
 ## Compatibility
 
-Due to attempting to use in progress or invalid parse trees this plugin is very sensitive to changes in the compiled version of the underlying Go treesitter parer.
+Due to attempting to use in progress or invalid parse trees this plugin is very sensitive to changes in the compiled version of the underlying Go treesitter parser.
 
 
 > [!IMPORTANT]
@@ -86,7 +86,7 @@ return {
 #### Defaults
 ```lua
 require("auto-fix-return").setup({
-  -- Enable or disable the autofix on type behvaior
+  -- Enable or disable the autofix on type behavior
   enabled = true,
   
   -- Default logging level for the plugin, if the plugin does not behave as it should
