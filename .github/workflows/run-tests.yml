@@ -20,7 +20,7 @@ jobs:
         version: v0.11.2
 
     - name: Install Just
-      uses: extractions/setup-just@v2
+      uses: extractions/setup-just@v3
 
     - name: Install Node
       uses: actions/setup-node@v4
