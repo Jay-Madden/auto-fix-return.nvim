@@ -13,3 +13,11 @@ function log(message, level)
     vim.notify(message, level)
   end
 end
+
+---@param message string
+---@param level integer
+function log_once(message, level)
+  if level >= _log_level then
+    vim.notify_once(message, level)
+  end
+end

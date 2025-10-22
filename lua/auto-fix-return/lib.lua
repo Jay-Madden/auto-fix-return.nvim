@@ -69,20 +69,6 @@ function M.setup_user_commands()
 end
 
 function M.enable_tree_cbs()
-  local rev = M.get_parser_version()
-
-  if rev ~= nil and rev ~= TESTED_PARSER_REV then
-    log(
-      "AutoFixReturn: Current Go treesitter parser version '"
-        .. rev
-        .. "' is not tested with this plugin.\n"
-        .. "If you encounter issues please upgrade your Go Treesitter parser to the tested version '"
-        .. TESTED_PARSER_REV
-        .. "'",
-      vim.log.levels.WARN
-    )
-  end
-
   for bufnr, _ in pairs(registered_ts_cbs_bufs) do
     registered_ts_cbs_bufs[bufnr] = true
   end
@@ -114,6 +100,21 @@ end
 function M.register_buf_cbs(bufnr)
   if vim.bo[bufnr].filetype ~= "go" then
     return
+  end
+
+  -- We should warn the users if they are using a parser version we do not know about
+  -- but only once on the initial go buffer attach otherwise it is annoying
+  local rev = M.get_parser_version()
+  if rev ~= nil and rev ~= TESTED_PARSER_REV then
+    log_once(
+      "AutoFixReturn: Current Go treesitter parser version '"
+        .. rev
+        .. "' is not tested with this plugin.\n"
+        .. "If you encounter issues please upgrade your Go Treesitter parser to the tested version '"
+        .. TESTED_PARSER_REV
+        .. "'",
+      vim.log.levels.WARN
+    )
   end
 
   local tree = vim.treesitter.get_parser(bufnr)
