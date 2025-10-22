@@ -52,7 +52,7 @@ install-ts-parser:
     fi
 
     cd "$PARSER_DIR"
-    git checkout "$PARSER_REV"
+    git reset --hard "$PARSER_REV"
 
     # Generate and compile the parser
     tree-sitter generate
