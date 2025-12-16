@@ -25,7 +25,6 @@ install-ts-parser:
     PARSERS_DIR="testbin/parser"
     PARSER_INFO_DIR="testbin/parser-info"
 
-    # Create directories
     mkdir -p "$PARSERS_DIR"
     mkdir -p "$PARSER_INFO_DIR"
 
@@ -38,7 +37,6 @@ install-ts-parser:
         fi
     fi
 
-    # Check for tree-sitter CLI
     if ! command -v tree-sitter &> /dev/null; then
         echo "Error: tree-sitter CLI not found. Install with:"
         echo "  npm install -g tree-sitter-cli"
@@ -46,7 +44,6 @@ install-ts-parser:
         exit 1
     fi
 
-    # Clone or update tree-sitter-go
     if [[ ! -d "$PARSER_DIR" ]]; then
         git clone https://github.com/tree-sitter/tree-sitter-go.git "$PARSER_DIR"
     fi
@@ -54,12 +51,10 @@ install-ts-parser:
     cd "$PARSER_DIR"
     git reset --hard "$PARSER_REV"
 
-    # Generate and compile the parser
     tree-sitter generate
     tree-sitter build --output "../parser/go.so"
     cd ../..
 
-    # Create parser info file
     echo "\"$PARSER_REV\"" > "$PARSER_INFO_DIR/go.revision"
 
     echo "Go parser compiled successfully at revision: $PARSER_REV"
