@@ -7,7 +7,8 @@ local M = {}
 local command_id = 0
 local registered_ts_cbs_bufs = {}
 
-local TESTED_PARSER_REV = "5e73f476efafe5c768eda19bbe877f188ded6144"
+local TESTED_PARSER_REVS =
+  { "5e73f476efafe5c768eda19bbe877f188ded6144", "2346a3ab1bb3857b48b29d779a1ef9799a248cd7" }
 
 local last_changenr = 0
 
@@ -22,31 +23,56 @@ function prequire(m)
 end
 
 ---If possible pull the installed TreeSitter parser version from 'nvim-treesitter'
+---nvim-treesitter has recently done a complete rewrite and moved from the 'master' branch to the 'main' branch
+---during this transition we try to get the parser versions from both versions of nvim-treesitter
 ---@return string|nil
 function M.get_parser_version()
-  local ts_config = prequire("nvim-treesitter.configs")
-  if ts_config == nil then
-    log("AutoFixReturn: failed to load nvim-treesitter.configs", vim.log.levels.DEBUG)
-    return nil
+  local parser_rev = nil
+
+  -- Try to get the parser version from the 'main' branch of nvim-treesitter first
+  local ts_main_parsers = prequire("nvim-treesitter.parsers")
+  if ts_main_parsers ~= nil then
+    local installed_parsers = prequire("nvim-treesitter").get_installed()
+    if not vim.tbl_contains(installed_parsers, "go") then
+      log(
+        "AutoFixReturn: nvim-treesitter found but Go parser not installed, run :TSInstall go",
+        vim.log.levels.WARN
+      )
+      return nil
+    end
+
+    local parsers = prequire("nvim-treesitter.parsers")
+    if parsers == nil then
+      log("AutoFixReturn: failed to load nvim-treesitter.parsers", vim.log.levels.DEBUG)
+      return nil
+    end
+
+    parser_rev = parsers["go"].install_info.revision
   end
 
-  local info_dir = ts_config.get_parser_info_dir()
-  if info_dir == nil then
-    log("AutoFixReturn: failed to get nvim-treesitter parser info directory", vim.log.levels.DEBUG)
-    return nil
+  -- If that fails try to get the parser version from the 'master' branch of nvim-treesitter
+  local ts_master_config = prequire("nvim-treesitter.configs")
+  if ts_master_config ~= nil then
+    local info_dir = ts_master_config.get_parser_info_dir()
+    if info_dir == nil then
+      log(
+        "AutoFixReturn: failed to get nvim-treesitter parser info directory",
+        vim.log.levels.DEBUG
+      )
+      return nil
+    end
+
+    local rev_file = io.open(info_dir .. "/go.revision")
+    if rev_file == nil then
+      return nil
+    end
+
+    local rev = rev_file:read("*a")
+    local value = string.gsub(rev, '"', "")
+    parser_rev = string.gsub(value, "\n", "")
   end
 
-  local rev_file = io.open(info_dir .. "/go.revision")
-
-  if rev_file == nil then
-    return nil
-  end
-
-  local rev = rev_file:read("*a")
-  local value = string.gsub(rev, '"', "")
-  value = string.gsub(value, "\n", "")
-
-  return value
+  return parser_rev
 end
 
 function M.setup_user_commands()
@@ -105,16 +131,18 @@ function M.register_buf_cbs(bufnr)
   -- We should warn the users if they are using a parser version we do not know about
   -- but only once on the initial go buffer attach otherwise it is annoying
   local rev = M.get_parser_version()
-  if rev ~= nil and rev ~= TESTED_PARSER_REV then
+  if rev ~= nil and not vim.tbl_contains(TESTED_PARSER_REVS, rev) then
     log_once(
       "AutoFixReturn: Current Go treesitter parser version '"
         .. rev
         .. "' is not tested with this plugin.\n"
-        .. "If you encounter issues please upgrade your Go Treesitter parser to the tested version '"
-        .. TESTED_PARSER_REV
+        .. "If you encounter issues please upgrade your Go Treesitter parser to one of the tested versions '"
+        .. vim.inspect(TESTED_PARSER_REVS)
         .. "'",
       vim.log.levels.WARN
     )
+  elseif rev ~= nil then
+    log_once("AutoFixReturn: Unable to find current Go treesitter version'", vim.log.levels.DEBUG)
   end
 
   local tree = vim.treesitter.get_parser(bufnr)

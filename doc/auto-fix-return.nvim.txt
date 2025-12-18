@@ -62,13 +62,13 @@ Due to attempting to use in progress or invalid parse trees this plugin is
 very sensitive to changes in the compiled version of the underlying Go
 treesitter parser.
 
-The current tested version of the Go parser that this plugin was written
-against is: `5e73f476efafe5c768eda19bbe877f188ded6144`
+The current tested versions of the Go parser that this plugin was written
+against are: `2346a3ab1bb3857b48b29d779a1ef9799a248cd7` and `5e73f476efafe5c768eda19bbe877f188ded6144`
 
 If you are using `nvim-treesitter` you can view your installed Go parser
 version with the following command:
 >
-    lua vim.print(io.open(require("nvim-treesitter.configs").get_parser_info_dir() .. "/go.revision"):read("*a"))
+    lua vim.print(require("auto-fix-return").get_parser_version() or "Version could not be determined")
 <
 
 Using an untested parser version may or may not work in all scenarios. The

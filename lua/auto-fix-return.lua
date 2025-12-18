@@ -3,6 +3,7 @@ require("auto-fix-return.log")
 local lib = require("auto-fix-return.lib")
 
 local M = {}
+
 ---@class AutoFixReturnConfigInternal
 ---@field enabled boolean
 ---@field log_level integer
@@ -15,6 +16,13 @@ function M.get_default_config()
   }
 
   return config
+end
+
+---If possible pull the installed TreeSitter parser version from 'nvim-treesitter'
+---returns nil if not found
+---@return string|nil
+function M.get_parser_version()
+  return lib.get_parser_version()
 end
 
 ---@class AutoFixReturnConfig
