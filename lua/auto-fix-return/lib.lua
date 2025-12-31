@@ -7,7 +7,7 @@ local M = {}
 local command_id = 0
 local registered_ts_cbs_bufs = {}
 
-local TESTED_PARSER_REVS =
+M.TESTED_PARSER_REVS =
   { "5e73f476efafe5c768eda19bbe877f188ded6144", "2346a3ab1bb3857b48b29d779a1ef9799a248cd7" }
 
 local last_changenr = 0
@@ -131,13 +131,13 @@ function M.register_buf_cbs(bufnr)
   -- We should warn the users if they are using a parser version we do not know about
   -- but only once on the initial go buffer attach otherwise it is annoying
   local rev = M.get_parser_version()
-  if rev ~= nil and not vim.tbl_contains(TESTED_PARSER_REVS, rev) then
+  if rev ~= nil and not vim.tbl_contains(M.TESTED_PARSER_REVS, rev) then
     log_once(
       "AutoFixReturn: Current Go treesitter parser version '"
         .. rev
         .. "' is not tested with this plugin.\n"
         .. "If you encounter issues please upgrade your Go Treesitter parser to one of the tested versions '"
-        .. vim.inspect(TESTED_PARSER_REVS)
+        .. vim.inspect(M.TESTED_PARSER_REVS)
         .. "'",
       vim.log.levels.WARN
     )
