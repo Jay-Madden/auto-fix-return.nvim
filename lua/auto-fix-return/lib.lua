@@ -30,24 +30,22 @@ function M.get_parser_version()
   local parser_rev = nil
 
   -- Try to get the parser version from the 'main' branch of nvim-treesitter first
-  local ts_main_parsers = prequire("nvim-treesitter.parsers")
-  if ts_main_parsers ~= nil then
-    local installed_parsers = prequire("nvim-treesitter").get_installed()
-    if not vim.tbl_contains(installed_parsers, "go") then
+  local parsers = prequire("nvim-treesitter.parsers")
+  if parsers ~= nil then
+    local configs = type(parsers.get_parser_configs) == "function" and parsers.get_parser_configs() or parsers
+    if configs == nil then
+      log("AutoFixReturn: failed to load nvim-treesitter.parsers", vim.log.levels.DEBUG)
+      return nil
+    end
+    local go_config = configs["go"]
+    if go_config == nil or go_config.install_info == nil then
       log(
         "AutoFixReturn: nvim-treesitter found but Go parser not installed, run :TSInstall go",
         vim.log.levels.WARN
       )
       return nil
     end
-
-    local parsers = prequire("nvim-treesitter.parsers")
-    if parsers == nil then
-      log("AutoFixReturn: failed to load nvim-treesitter.parsers", vim.log.levels.DEBUG)
-      return nil
-    end
-
-    parser_rev = parsers["go"].install_info.revision
+    parser_rev = go_config.install_info.revision
   end
 
   -- If that fails try to get the parser version from the 'master' branch of nvim-treesitter
